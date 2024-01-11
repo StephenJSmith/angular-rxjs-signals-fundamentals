@@ -1,27 +1,31 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 
-import { NgIf, NgFor, NgClass } from '@angular/common';
-import { Product } from '../product';
+import { NgIf, NgFor, NgClass, AsyncPipe } from '@angular/common';
 import { ProductDetailComponent } from '../product-detail/product-detail.component';
+import { ProductService } from '../product.service';
 
 @Component({
-    selector: 'pm-product-list',
-    templateUrl: './product-list.component.html',
-    standalone: true,
-  imports: [NgIf, NgFor, NgClass, ProductDetailComponent]
+  selector: 'pm-product-list',
+  templateUrl: './product-list.component.html',
+  standalone: true,
+  imports: [
+    NgIf, 
+    NgFor, 
+    NgClass, 
+    ProductDetailComponent,
+    AsyncPipe,
+  ],
 })
-export class ProductListComponent {
-  // Just enough here for the template to compile
+export class ProductListComponent  {
   pageTitle = 'Products';
-  errorMessage = '';
+  private productService = inject(ProductService);
+  products = this.productService.products;
+  errorMessage = this.productService.productsError;
 
-  // Products
-  products: Product[] = [];
-
-  // Selected product id to highlight the entry
-  selectedProductId: number = 0;
+  // readonly selectedProductId$ = this.productService.productSelected$;
+  selectedProductId = this.productService.selectedProductId;
 
   onSelected(productId: number): void {
-    this.selectedProductId = productId;
+    this.productService.productSelected(productId);
   }
 }

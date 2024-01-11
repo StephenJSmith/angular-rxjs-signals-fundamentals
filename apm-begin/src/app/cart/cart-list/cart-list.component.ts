@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { CartItem } from '../cart';
 import { CartItemComponent } from '../cart-item/cart-item.component';
+import { CartService } from '../cart.service';
 
 @Component({
   selector: 'sw-cart-list',
@@ -10,8 +11,8 @@ import { CartItemComponent } from '../cart-item/cart-item.component';
   templateUrl: 'cart-list.component.html'
 })
 export class CartListComponent {
-  // Just enough here for the template to compile
   pageTitle = 'Cart';
+  private cartService = inject(CartService);
 
-  cartItems: CartItem[] = [];
+  cartItems = this.cartService.cartItems;
 }
